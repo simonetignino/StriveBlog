@@ -1,0 +1,11 @@
+const controlloMail = (req, res, next) => {
+  const mail = "aurotizzato@gmail.com";
+  const mailUtente = req.headers["user-email"];
+  if (mail === mailUtente) {
+    next();
+  } else {
+    res.status(403).json({ message: "Accesso negato, utente non autorizzato" });
+  }
+};
+
+export default controlloMail();
