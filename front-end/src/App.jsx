@@ -15,8 +15,27 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import { useState } from "react";
 import { useEffect } from "react";
+import { getPosts } from "./services/api";
 
 function App() {
+  // Elevazione di stato per gestirmi anche la ricerca dei post tramite barra di ricerca
+  const [posts, setPosts] = useState([]);
+  const [filteredPost, setFilteredPost] = useState([]);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const response = await getPosts();
+        // console.log(response.data);
+        setPosts(response.data.blogPosts);
+        // console.log(response.data);
+      } catch (error) {
+        console.error("errore nella get di tutti i post", error);
+      }
+    };
+    fetchPosts();
+  }, []);
+
   const [isLogged, setIsLogged] = useState(
     () => !!localStorage.getItem("token"),
   );
@@ -42,15 +61,36 @@ function App() {
 
   return (
     <Router>
-      <MyNavbar isLogged={isLogged} setIsLogged={setIsLogged} />
+      <MyNavbar
+        isLogged={isLogged}
+        setIsLogged={setIsLogged}
+        posts={posts}
+        filteredPosts={filteredPost}
+        setFilteredPost={setFilteredPost}
+      />
       <Container className="d-flex justify-content-center">
         <Routes>
           <Route
             path="/"
-            element={isLogged ? <Home /> : <Navigate to="/login" />}
+            element={
+              isLogged ? (
+                <Home posts={posts} filteredPost={filteredPost} />
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
           />
           <Route path="/login" element={<Login />} />
-          <Route path="/home" element={isLogged ? <Home /> : <Login />}></Route>
+          <Route
+            path="/home"
+            element={
+              isLogged ? (
+                <Home posts={posts} filteredPost={filteredPost} />
+              ) : (
+                <Login />
+              )
+            }
+          ></Route>
           <Route
             path="/create"
             element={isLogged ? <CreatePost /> : <Login />}

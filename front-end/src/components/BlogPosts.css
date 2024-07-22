@@ -1,0 +1,33 @@
+.blog-post-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.blog-post-link:hover {
+    color: inherit;
+}
+
+.hover-effect {
+    transition:
+        transform 0.3s ease-in-out,
+        box-shadow 0.3s ease-in-out;
+}
+
+.hover-effect:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.card-title {
+    font-size: 1.1rem;
+    line-height: 1.4;
+}
+
+.read-time {
+    font-size: 0.8rem;
+}
+
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
+}

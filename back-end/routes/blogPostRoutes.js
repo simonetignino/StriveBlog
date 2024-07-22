@@ -2,7 +2,7 @@ import express from "express";
 import BlogPost from "../models/BlogPosts.js";
 import upload from "../middlewares/upload.js";
 // import controlloMail from "../middlewares/controlloMail.js";
-import cloudinaryUploader from "../config/cloudinaryConfig.js";
+import cloudinaryUploader from "../config/cloudinaryConfigPost.js";
 import { authMiddleware } from "../middlewares/authMiddleware.js";
 import { sendEmail } from "../services/emailService.js";
 
@@ -12,12 +12,26 @@ const router = express.Router();
 // Rotta per avere l'elenco di tutti i blogPost
 router.get("/", async (req, res) => {
   try {
+    const page = parseInt(req.query.page) || 1; // variabile per selezionare la pagina (pagina 1 di default)
+    const limit = parseInt(req.query.limit) || 10; // variabile per selezionare quanti utenti verranno visualizzati in una pagina (10 di dafault)
+    const sort = req.query.sort || "name"; // decido in base a cosa ordinare gli elementi
+    const sortDirection = req.query.sortDirection === "desc" ? -1 : 1; // decido se ordinare in modo crescente o decresente
+    const skip = (page - 1) * limit; // creo una variabile che utilizzerò per cambiare pagina
     let query = {};
     if (req.query.title) {
       query.title = { $regex: req.query.title, $options: "i" };
     }
-    const blogPosts = await BlogPost.find(query);
-    res.json(blogPosts);
+    const blogPosts = await BlogPost.find(query)
+      .sort({ [sort]: sortDirection })
+      .skip(skip)
+      .limit(limit);
+    const total = await BlogPost.countDocuments();
+    res.json({
+      blogPosts,
+      currentPage: page,
+      totalPages: Math.ceil(total / limit),
+      totalBlogPost: total,
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -37,6 +51,40 @@ router.get("/:id", async (req, res) => {
 });
 
 router.use(authMiddleware);
+
+router.get("/?title=:title", async (req, res) => {
+  try {
+    // faremo una ricerca in base al titolo
+    const { title } = req.query;
+
+    // controllo se il parametro title è stato fornito, in caso darà errore 400
+    if (!title) {
+      return res
+        .status(400)
+        .json({ message: "Il parametro 'title' è richiesto" });
+    }
+
+    // Ricerco nel database il post con il titolo ricercato
+    const blogPosts = await BlogPost.find({
+      // Utilizzo regex per cercare post che contengono il titolo digitato
+      // $regex: permette di usare espressioni regolari nella ricerca
+      // $options: "i" rende la ricerca case-insensitive
+      title: { $regex: title, $options: "i" },
+    });
+
+    // se la lunghezza di blogPost è 0, evidentemento non è stato trovato nulla
+    if (blogPosts.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "Nessun post trovato con questo titolo" });
+    }
+
+    // restituisco i risultati
+    res.json(blogPosts);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 
 // Rotta per creare un nuovo blogPost
 // router.post("/", async (req, res) => {

@@ -1,0 +1,47 @@
+.custom-navbar {
+    background-color: #2c3e50;
+    padding: 1rem 0;
+}
+
+.brand-font {
+    font-family: "Poppins", sans-serif;
+    font-weight: 700;
+    color: #ecf0f1 !important;
+}
+
+.nav-link {
+    color: #ecf0f1 !important;
+    margin-right: 1rem;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    color: #3498db !important;
+}
+
+.search-input {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.search-btn {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.settings-btn {
+    padding: 0.375rem 0.75rem;
+}
+
+.dropdown-menu {
+    background-color: #34495e;
+}
+
+.dropdown-item {
+    color: #ecf0f1;
+}
+
+.dropdown-item:hover {
+    background-color: #2c3e50;
+    color: #3498db;
+}

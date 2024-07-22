@@ -1,32 +1,28 @@
-import { useEffect, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import BlogPosts from "../components/BlogPosts";
-import { getPosts } from "../services/api";
+import PropTypes from "prop-types";
 
-export default function Home() {
-  const [posts, setPosts] = useState([]);
-
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const response = await getPosts();
-        setPosts(response.data);
-        // console.log(response.data);
-      } catch (error) {
-        console.error("errore nella get di tutti i post", error);
-      }
-    };
-    fetchPosts();
-  }, []);
-
+function Home({ posts, filteredPost }) {
   return (
     <Row>
       <Col>
         <h1 className="text-center mt-4">Home Page</h1>
         <Row className="d-flex justify-content-center align-items-center flex-column mt-4">
-          <BlogPosts posts={posts} />
+          {/* Se la lunghezza dell'array restituito è 0, passo tutti i post. Sennò passo i post filtrati  */}
+          {filteredPost.length === 0 ? (
+            <BlogPosts posts={posts} />
+          ) : (
+            <BlogPosts posts={filteredPost} />
+          )}
         </Row>
       </Col>
     </Row>
   );
 }
+
+Home.propTypes = {
+  posts: PropTypes.array.isRequired,
+  filteredPost: PropTypes.array.isRequired,
+};
+
+export default Home;

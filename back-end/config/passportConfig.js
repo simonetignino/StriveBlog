@@ -1,6 +1,6 @@
 import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
-import Author from "../models/BlogPosts.js";
+import Author from "../models/Authors.js";
 
 // Configuriamo la strategia di autenticazione con Google
 passport.use(
@@ -21,7 +21,7 @@ passport.use(
         if (!author) {
           author = new Author({
             googleId: profile.id,
-            name: profile.name.giveName,
+            name: profile.name.givenName,
             surname: profile.name.familyName,
             email: profile.emails[0].value,
           });

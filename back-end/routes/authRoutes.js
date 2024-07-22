@@ -40,29 +40,25 @@ router.get("/me", authMiddleware, (req, res) => {
   res.json(authorData);
 });
 
+// Rotte per Google
+// Gestisce l'inizio dell'autenticazione google
 router.get(
   "/google",
   passport.authenticate("google", { scope: ["profile", "email"] }),
 );
 
+// Gestisce il dopo
 router.get(
   "/google/callback",
-  // Passport prova autenticare l'utente con le sue credienziali di google
   passport.authenticate("google", { failureRedirect: "/login" }),
-),
-  // Utente entra
   async (req, res) => {
     try {
-      // Devo genereare un token JWT per l'utente loggato
-      // Sfrutterò l'id dell'utente come payload del token
       const token = await generateJWT({ id: req.user._id });
-
-      // reinderizzo l' utente al frontend, passando magari il token come parametro URL
-      // così il front end può salvare questo token e usarlo per le richieste autenticate
-      res.redirect(`http://localhost:5173/login?token${token}`);
+      res.redirect(`http://localhost:5173/login?token=${token}`);
     } catch (err) {
-      console.error("Errore nella genereazione del token", err);
-      res.redirect("/login/error=auth_failed");
+      console.error("Errore nella generazione del token", err);
+      res.redirect("/login?error=auth_failed");
     }
-  };
+  },
+);
 export default router;

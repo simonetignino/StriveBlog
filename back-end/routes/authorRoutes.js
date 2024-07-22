@@ -1,7 +1,7 @@
 import express from "express";
 import Authors from "../models/Authors.js";
 import BlogPosts from "../models/BlogPosts.js";
-import cloudinaryUploader from "../config/cloudinaryConfig.js";
+import cloudinaryUploader from "../config/cloudinaryConfigAuthor.js";
 
 const router = express.Router();
 
@@ -11,7 +11,7 @@ router.get("/", async (req, res) => {
     const page = parseInt(req.query.page) || 1; // variabile per selezionare la pagina (pagina 1 di default)
     const limit = parseInt(req.query.limit) || 10; // variabile per selezionare quanti utenti verranno visualizzati in una pagina (10 di dafault)
     const sort = req.query.sort || "name"; // decido in base a cosa ordinare gli elementi
-    const sortDirection = req.query.sortDiretcion === "desc" ? -1 : 1; // decido se ordinare in modo crescente o decresente
+    const sortDirection = req.query.sortDirection === "desc" ? -1 : 1; // decido se ordinare in modo crescente o decresente
     const skip = (page - 1) * limit; // creo una variabile che utilizzerò per cambiare pagina
     const authors = await Authors.find({})
       .sort({ [sort]: sortDirection })
@@ -80,8 +80,8 @@ router.get("/:id", async (req, res) => {
 // });
 router.post("/", cloudinaryUploader.single("avatar"), async (req, res) => {
   try {
-    console.log("File ricevuto:", req.file);
-    console.log("Body ricevuto:", req.body);
+    // console.log("File ricevuto:", req.file);
+    // console.log("Body ricevuto:", req.body);
 
     const userData = req.body;
     if (req.file) {
