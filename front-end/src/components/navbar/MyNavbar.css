@@ -19,14 +19,30 @@
     color: #3498db !important;
 }
 
+/* Nuove regole per l'InputGroup e il pulsante di ricerca */
+.input-group {
+    height: 38px; /* Altezza fissa per l'intero gruppo */
+}
+
 .search-input {
+    height: 100%;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
 }
 
 .search-btn {
+    height: 100%;
+    width: 38px; /* Larghezza fissa per il pulsante */
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
+    padding: 0; /* Rimuove il padding interno */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-btn i {
+    font-size: 1rem; /* Adatta la dimensione dell'icona */
 }
 
 .settings-btn {
