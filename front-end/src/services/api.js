@@ -50,7 +50,7 @@ export const updateComment = (postId, commentId, commentData) =>
 export const deleteComment = (postId, commentId) =>
   api
     .delete(`/blogPosts/${postId}/comments/${commentId}`)
-    .then((response) => response.data);
+    .then((response) => ({ ...response.data, ok: response.status === 200 }));
 
 // ROTTE PER AUTENTICAZIONE
 // NEW! Funzione per registrare un nuovo utente

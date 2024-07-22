@@ -2,8 +2,9 @@ import { useState } from "react";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import { useNavigate } from "react-router-dom";
-import { createPost } from "../services/api";
+import { createPost, getMe } from "../services/api";
 import { Button } from "react-bootstrap";
+import { useEffect } from "react";
 
 function CreatePost() {
   const [post, setPost] = useState({
@@ -24,6 +25,19 @@ function CreatePost() {
   const handleFileChange = (e) => {
     setCoverFile(e.target.files[0]);
   };
+
+  useEffect(() => {
+    const fetchUserEmail = async () => {
+      try {
+        const userData = await getMe();
+        setPost((prevPost) => ({ ...prevPost, author: userData.email }));
+      } catch (error) {
+        console.error("Errore nel recupero dei dati utente:", error);
+        navigate("/login");
+      }
+    };
+    fetchUserEmail();
+  }, [navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

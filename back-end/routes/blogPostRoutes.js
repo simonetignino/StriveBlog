@@ -128,14 +128,14 @@ router.post("/", cloudinaryUploader.single("cover"), async (req, res) => {
 // Rotta per modificare un blogPost
 router.patch("/:id", async (req, res) => {
   try {
-    const updateAuthor = await BlogPost.findByIdAndUpdate(
+    const updateBlog = await BlogPost.findByIdAndUpdate(
       req.params.id,
       req.body,
       {
         new: true,
       },
     );
-    res.json(updateAuthor);
+    res.json(updateBlog);
   } catch (err) {
     res.status(400).json({ message: err.message });
   }

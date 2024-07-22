@@ -11,7 +11,11 @@ const commentsSchema = new mongoose.Schema(
     content: {
       type: String,
     },
+    avatar: {
+      tpye: String,
+    },
   },
+
   {
     timestamps: true,
     _id: true,

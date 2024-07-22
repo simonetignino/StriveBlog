@@ -20,12 +20,12 @@ function BasicExample() {
     const params = new URLSearchParams(location.search);
     // Cerchiamo un parametro 'token' nell'URL
     const token = params.get("token");
-    console.log("Received token:", token);
+    // console.log("Received token:", token);
 
     // Se troviamo un token, lo salviamo nel localStorage
     if (token) {
       localStorage.setItem("token", token);
-      console.log("Token saved, navigating to home");
+      // console.log("Token saved, navigating to home");
       // Dispatchamo un evento 'storage' per aggiornare altri componenti che potrebbero dipendere dal token
       window.dispatchEvent(new Event("storage"));
       window.dispatchEvent(new Event("loginStateChange"));

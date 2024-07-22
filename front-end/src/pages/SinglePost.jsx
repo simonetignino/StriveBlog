@@ -1,6 +1,12 @@
 import { useState, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
-import { getPost, getComments, addComment, getUserData } from "../services/api";
+import { useParams } from "react-router-dom";
+import {
+  getPost,
+  getComments,
+  addComment,
+  getUserData,
+  deleteComment,
+} from "../services/api";
 import {
   Button,
   Col,
@@ -9,7 +15,6 @@ import {
   Image,
   Row,
   Spinner,
-  Toast,
 } from "react-bootstrap";
 import "./SinglePost.css";
 
@@ -25,7 +30,7 @@ export default function SinglePost() {
     const fetchPost = async () => {
       try {
         const postData = await getPost(id);
-        console.log(postData);
+        // console.log(postData);
         setPost(postData.data); // Assicurati che questo sia un singolo post, non un array
       } catch (err) {
         console.error("Errore nel caricamento del post:", err);
@@ -64,15 +69,13 @@ export default function SinglePost() {
 
   const handleCommentSubmit = async (e) => {
     e.preventDefault(); // Previene il comportamento predefinito del form di ricaricare la pagina
-    if (!isLogged) {
-      console.error("Devi effettuare il login per commentare."); // Logga un messaggio di errore se l'utente non è loggato
-      return;
-    }
     try {
+      // console.log(userData);
       const commentData = {
         content: newComment.content, // Contenuto del nuovo commento
-        name: `${userData.nome} ${userData.cognome}`, // Nome dell'utente
+        name: `${userData.name[0].toUpperCase() + userData.name.slice(1).toLowerCase()} ${userData.surname[0].toUpperCase() + userData.surname.slice(1).toLowerCase()}`, // Nome dell'utente
         email: userData.email, // Email dell'utente
+        avatar: userData.avatar,
       };
       const newCommentData = await addComment(id, commentData); // Invia il nuovo commento all'API
 
@@ -92,6 +95,26 @@ export default function SinglePost() {
     }
   };
 
+  const handleCommentDelete = async (commentId) => {
+    try {
+      const response = await deleteComment(post._id, commentId);
+      if (response.ok) {
+        setComments((prevComments) =>
+          prevComments.filter((comment) => comment._id !== commentId),
+        );
+        alert("Commento eliminato");
+      } else {
+        alert("Errore nel rimuovere il commento");
+      }
+    } catch (err) {
+      console.log(commentId);
+      console.error("Errore nell'eliminazione del commento:", err);
+      alert(
+        "Si è verificato un errore durante l'eliminazione del commento. Riprova più tardi.",
+      );
+    }
+  };
+
   if (!post) {
     return (
       <Spinner animation="border" role="status">
@@ -105,6 +128,11 @@ export default function SinglePost() {
       <Row className="justify-content-center">
         <Col lg={8}>
           <h1 className="display-4 mb-3">{post.title}</h1>
+          {userData.email === post.author && (
+            <Button variant="danger" className="mb-2">
+              <i className="bi bi-pencil-square"></i>
+            </Button>
+          )}
           <div className="mb-4 text-muted">
             <span>By {post.author} | </span>
             <span>{new Date(post.createdAt).toLocaleDateString()}</span>
@@ -136,6 +164,25 @@ export default function SinglePost() {
                   <strong>{comment.name}</strong>
                   <small className="text-muted ms-auto">
                     {new Date(comment.createdAt).toLocaleString()}
+                  </small>
+                  <small>
+                    {userData.email === comment.email && (
+                      <Button
+                        onClick={() => handleCommentDelete(comment._id)}
+                        variant="outline-danger"
+                        className="p-1 px-2 rounded-circle ms-2"
+                        style={{
+                          fontSize: "0.75rem",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          width: "1.5rem",
+                          height: "1.5rem",
+                        }}
+                      >
+                        <i className="bi bi-x"></i>
+                      </Button>
+                    )}
                   </small>
                 </div>
                 <p className="mb-0">{comment.content}</p>

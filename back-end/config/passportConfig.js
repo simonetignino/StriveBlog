@@ -19,9 +19,10 @@ passport.use(
 
         // Se non esiste, lo creo
         if (!author) {
+          console.log(profile);
           author = new Author({
             googleId: profile.id,
-            name: profile.name.givenName,
+            name: profile.givenName,
             surname: profile.name.familyName,
             email: profile.emails[0].value,
           });
