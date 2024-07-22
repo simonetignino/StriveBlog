@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { registerUser } from "../services/api";
 import Form from "react-bootstrap/Form";
 import { Button, Card, Container } from "react-bootstrap";
+import "./Register.css";
 
 export default function Register() {
   // console.log("vengo caricato");

@@ -50,7 +50,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.use(authMiddleware);
+// router.use(authMiddleware);
 
 router.get("/?title=:title", async (req, res) => {
   try {
@@ -273,7 +273,7 @@ router.delete("/:id/comments/:commentId", async (req, res) => {
     if (!comment) {
       return res.status(404).json({ message: "Commento non trovato" });
     }
-    comment.remove();
+    post.comments.pull({ _id: req.params.commentId });
     await post.save();
     res.json({ message: "Commento eliminato con successo" });
   } catch (err) {

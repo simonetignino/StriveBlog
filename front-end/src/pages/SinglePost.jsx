@@ -67,6 +67,14 @@ export default function SinglePost() {
     checkAuthAndFetchUserData();
   }, [id]);
 
+  // const handlePatchPost = async (postId) => {
+  //   try {
+  //     const postToUpdate = await
+  //   } catch (err) {
+  //     console.error(err)
+  //   }
+  // };
+
   const handleCommentSubmit = async (e) => {
     e.preventDefault(); // Previene il comportamento predefinito del form di ricaricare la pagina
     try {
@@ -102,15 +110,16 @@ export default function SinglePost() {
         setComments((prevComments) =>
           prevComments.filter((comment) => comment._id !== commentId),
         );
-        alert("Commento eliminato");
+        alert("Commento eliminato con successo");
       } else {
-        alert("Errore nel rimuovere il commento");
+        // Se la risposta non è ok, ma non è stato lanciato un errore
+        alert(response.message || "Errore nel rimuovere il commento");
       }
     } catch (err) {
-      // console.log(commentId);
       console.error("Errore nell'eliminazione del commento:", err);
       alert(
-        "Si è verificato un errore durante l'eliminazione del commento. Riprova più tardi.",
+        err.message ||
+          "Si è verificato un errore durante l'eliminazione del commento. Riprova più tardi.",
       );
     }
   };
@@ -129,7 +138,11 @@ export default function SinglePost() {
         <Col lg={8}>
           <h1 className="display-4 mb-3">{post.title}</h1>
           {userData.email === post.author && (
-            <Button variant="danger" className="mb-2">
+            <Button
+              // onClick={() => handlePatchPost(post._id)}
+              variant="danger"
+              className="mb-2"
+            >
               <i className="bi bi-pencil-square"></i>
             </Button>
           )}
