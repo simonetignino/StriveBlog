@@ -107,7 +107,7 @@ export default function SinglePost() {
         alert("Errore nel rimuovere il commento");
       }
     } catch (err) {
-      console.log(commentId);
+      // console.log(commentId);
       console.error("Errore nell'eliminazione del commento:", err);
       alert(
         "Si è verificato un errore durante l'eliminazione del commento. Riprova più tardi.",

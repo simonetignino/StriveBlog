@@ -2,8 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { registerUser } from "../services/api";
 import Form from "react-bootstrap/Form";
-import InputGroup from "react-bootstrap/InputGroup";
-import { Button } from "react-bootstrap";
+import { Button, Card, Container } from "react-bootstrap";
 
 export default function Register() {
   // console.log("vengo caricato");
@@ -51,80 +50,75 @@ export default function Register() {
   };
 
   return (
-    <Form
-      className="mt-3 d-flex flex-column justify-content-center align-items-center"
-      onSubmit={handleSubmit}
-    >
-      <h2 className="mb-4">Register</h2>
-      <InputGroup className="mb-3 ">
-        <Form.Control
-          name="name"
-          placeholder="Name"
-          aria-label="Name"
-          aria-describedby="basic-addon1"
-          onChange={handleChange}
-        />
-      </InputGroup>
+    <Container className="d-flex justify-content-center align-items-center mt-5">
+      <Card className="register-card">
+        <Card.Body>
+          <h2 className="text-center mb-4">Registrazione</h2>
+          <Form onSubmit={handleSubmit}>
+            <Form.Group className="mb-3">
+              <Form.Control
+                name="name"
+                placeholder="Nome"
+                onChange={handleChange}
+              />
+            </Form.Group>
 
-      <InputGroup className="mb-3 ">
-        <Form.Control
-          name="surname"
-          placeholder="Surname"
-          aria-label="Surname"
-          aria-describedby="basic-addon1"
-          onChange={handleChange}
-        />
-      </InputGroup>
+            <Form.Group className="mb-3">
+              <Form.Control
+                name="surname"
+                placeholder="Cognome"
+                onChange={handleChange}
+              />
+            </Form.Group>
 
-      <InputGroup className="mb-3 ">
-        <Form.Control
-          name="email"
-          placeholder="Email"
-          aria-label="Email"
-          aria-describedby="basic-addon2"
-          onChange={handleChange}
-        />
-      </InputGroup>
+            <Form.Group className="mb-3">
+              <Form.Control
+                name="email"
+                type="email"
+                placeholder="Email"
+                onChange={handleChange}
+              />
+            </Form.Group>
 
-      <InputGroup className="mb-3 ">
-        <Form.Control
-          name="birthday"
-          type="date"
-          placeholder="Birthday"
-          aria-label="Birthday"
-          aria-describedby="basic-addon2"
-          onChange={handleChange}
-        />
-      </InputGroup>
-      <InputGroup className="mb-3 ">
-        <Form.Control
-          name="avatar"
-          type="file"
-          placeholder="avatar"
-          aria-label="avatar"
-          aria-describedby="basic-addon2"
-          onChange={handleFileChange}
-        />
-      </InputGroup>
-      <InputGroup className="mb-3 ">
-        <Form.Control
-          name="password"
-          type="password"
-          placeholder="Password"
-          aria-label="Password"
-          aria-describedby="basic-addon2"
-          onChange={handleChange}
-        />
-      </InputGroup>
-      <InputGroup className="mb-3  d-flex justify-content-between align-items-center">
-        <Button type="submit" variant="success">
-          Register Now
-        </Button>
-        {"or"}
-        <Link to="/login">
-          <Button variant="primary">Login</Button>
-        </Link>
-      </InputGroup>
-    </Form>
+            <Form.Group className="mb-3">
+              <Form.Control
+                name="birthday"
+                type="date"
+                placeholder="Data di nascita"
+                onChange={handleChange}
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Control
+                name="avatar"
+                type="file"
+                onChange={handleFileChange}
+              />
+              <Form.Text className="text-muted">
+                Scegli un'immagine per il tuo avatar
+              </Form.Text>
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Control
+                name="password"
+                type="password"
+                placeholder="Password"
+                onChange={handleChange}
+              />
+            </Form.Group>
+
+            <Button variant="success" type="submit" className="w-100 mb-3">
+              Registrati ora
+            </Button>
+
+            <div className="text-center">
+              Hai già un account? <Link to="/login">Accedi</Link>
+            </div>
+          </Form>
+        </Card.Body>
+      </Card>
+    </Container>
   );
 }
