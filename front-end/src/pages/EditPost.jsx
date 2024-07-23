@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button, Col, Container, Form, InputGroup, Row } from "react-bootstrap";
-import { deletePost, getPost, updatePost } from "../services/api";
+import { deletePost, getMe, getPost, updatePost } from "../services/api";
 
 function EditPost() {
   const { id } = useParams();
@@ -24,7 +24,7 @@ function EditPost() {
         const response = await getPost(id);
         // console.log(response);
         const post = response.data;
-        console.log(post);
+        // console.log(post);
         setPost(post);
       } catch (err) {
         console.error("Errore nel caricamento del post:", err);
@@ -32,6 +32,21 @@ function EditPost() {
     }
     fetchPost();
   }, [id]);
+
+  // const fetchAuthorEmail = async () => {
+  //   try {
+  //     const authorData = await getMe();
+  //     console.log(authorData);
+  //     console.log(post.author);
+  //     if (authorData.email !== post.author) {
+  //       alert("non puoi accedere a questa funzione");
+  //       navigate("/");
+  //     }
+  //   } catch (error) {
+  //     console.error("Errore nel recupero dei dati utente:", error);
+  //     navigate("/");
+  //   }
+  // };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -49,6 +64,7 @@ function EditPost() {
   };
 
   const handleUpdate = async (e) => {
+    // fetchAuthorEmail();
     e.preventDefault();
     try {
       const updatedPost = {
@@ -65,6 +81,7 @@ function EditPost() {
   };
 
   const handleDelete = async (e) => {
+    // fetchAuthorEmail();
     e.preventDefault();
     try {
       await deletePost(id);
