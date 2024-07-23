@@ -32,3 +32,12 @@
     justify-content: center;
     font-weight: bold;
 }
+
+.bi-pencil-square {
+    color: red;
+    font-size: 22px;
+}
+
+.image-cover {
+    min-width: 500px;
+}

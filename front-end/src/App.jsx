@@ -16,6 +16,8 @@ import Register from "./pages/Register";
 import { useState } from "react";
 import { useEffect } from "react";
 import { getPosts } from "./services/api";
+import EditPost from "./pages/EditPost";
+import NotFound from "./pages/NotFound";
 
 function App() {
   // Elevazione di stato per gestirmi anche la ricerca dei post tramite barra di ricerca
@@ -100,7 +102,8 @@ function App() {
             element={isLogged ? <SinglePost /> : <Navigate to="/login" />}
           ></Route>
           <Route path="/register" element={<Register />}></Route>
-          {/* <Route path="*" element={<NotFound />}></Route> */}
+          <Route path="/post/:id/edit" element={<EditPost />}></Route>
+          <Route path="*" element={<NotFound />}></Route>
         </Routes>
       </Container>
     </Router>

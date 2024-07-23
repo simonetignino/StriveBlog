@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import {
   getPost,
   getComments,
@@ -137,16 +137,12 @@ export default function SinglePost() {
       <Row className="justify-content-center">
         <Col lg={8}>
           <h1 className="display-4 mb-3">{post.title}</h1>
-          {userData && userData.email === post.author && (
-            <Button
-              // onClick={() => handlePatchPost(post._id)}
-              variant="danger"
-              className="mb-2"
-            >
-              <i className="bi bi-pencil-square"></i>
-            </Button>
-          )}
           <div className="mb-4 text-muted">
+            {userData && userData.email === post.author && (
+              <Link to={`/post/${post._id}/edit`} className="blog-post-link">
+                <i className="bi bi-pencil-square me-2"></i>
+              </Link>
+            )}
             <span>By {post.author} | </span>
             <span>{new Date(post.createdAt).toLocaleDateString()}</span>
           </div>
@@ -154,7 +150,7 @@ export default function SinglePost() {
             src={post.cover}
             alt={post.title}
             fluid
-            className="rounded shadow-lg mb-5"
+            className="rounded shadow-lg mb-5 image-cover"
           />
           <div className="bg-light p-4 rounded">
             <p className="lead mb-4">{post.content.substring(0, 150)}...</p>
