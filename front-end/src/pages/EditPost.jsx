@@ -1,15 +1,7 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import {
-  Button,
-  Col,
-  Container,
-  Form,
-  InputGroup,
-  Row,
-  Spinner,
-} from "react-bootstrap";
-import { getPost, updatePost } from "../services/api";
+import { useNavigate, useParams } from "react-router-dom";
+import { Button, Col, Container, Form, InputGroup, Row } from "react-bootstrap";
+import { deletePost, getPost, updatePost } from "../services/api";
 
 function EditPost() {
   const { id } = useParams();
@@ -24,13 +16,15 @@ function EditPost() {
     author: "",
   });
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     async function fetchPost() {
       try {
         const response = await getPost(id);
         // console.log(response);
         const post = response.data;
-        // console.log(post);
+        console.log(post);
         setPost(post);
       } catch (err) {
         console.error("Errore nel caricamento del post:", err);
@@ -42,39 +36,43 @@ function EditPost() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === "readTime") {
-      setPost({
-        ...post,
-        readTime: { ...post.readTime, value: parseInt(value) },
-      });
+      setPost((prevPost) => ({
+        ...prevPost,
+        readTime: {
+          ...prevPost.readTime,
+          value: parseInt(value) || 0,
+        },
+      }));
     } else {
-      setPost({ ...post, [name]: value });
+      setPost((prevPost) => ({ ...prevPost, [name]: value }));
     }
   };
 
-  const handleEdit = (e) => {
+  const handleUpdate = async (e) => {
     e.preventDefault();
-    // Invia la richiesta PATCH
-    async function fetchPost() {
-      try {
-        const response = await updatePost(id, post);
-        // console.log(response);
-        const post = response.data;
-        // console.log(post);
-        setPost(post);
-      } catch (err) {
-        console.error("Errore nella modifica del post:", err);
-      }
+    try {
+      const updatedPost = {
+        ...post,
+        readTime: post.readTime || { value: 0, unit: "minutes" },
+      };
+      console.log(id);
+      const response = await updatePost(id, updatedPost);
+      setPost(response.data);
+      navigate(`/post/${id}`);
+    } catch (err) {
+      console.error("Errore nella modifica del post:", err);
     }
-    fetchPost();
   };
 
-  if (!post) {
-    return (
-      <Spinner animation="border" role="status">
-        <span className="visually-hidden">Loading...</span>
-      </Spinner>
-    );
-  }
+  const handleDelete = async (e) => {
+    e.preventDefault();
+    try {
+      await deletePost(id);
+      navigate("/");
+    } catch (err) {
+      console.error("Post non trovato", err);
+    }
+  };
 
   return (
     <Container>
@@ -169,7 +167,7 @@ function EditPost() {
         <Row className="mb-3">
           <Col className="d-flex justify-content-center">
             <Button
-              onClick={handleEdit}
+              onClick={handleUpdate}
               className="me-3"
               variant="outline-success"
               type="submit"
@@ -177,7 +175,12 @@ function EditPost() {
             >
               Modifica
             </Button>
-            <Button variant="outline-danger" type="submit" data-custom-input>
+            <Button
+              onClick={handleDelete}
+              variant="outline-danger"
+              type="submit"
+              data-custom-input
+            >
               Elimina
             </Button>
           </Col>

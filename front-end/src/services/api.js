@@ -31,8 +31,8 @@ export const createPost = (postData) =>
     },
   });
 export const updatePost = (id, postData) =>
-  api.patch(`/blogPosts${id}`, postData);
-export const deletePost = (id) => api.delete(`/blogPosts${id}`);
+  api.patch(`/blogPosts/${id}`, postData);
+export const deletePost = (id) => api.delete(`/blogPosts/${id}`);
 export const getComments = (postId) =>
   api.get(`/blogPosts/${postId}/comments`).then((response) => response.data);
 export const addComment = (postId, commentData) =>
