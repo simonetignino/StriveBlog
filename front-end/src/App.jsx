@@ -34,7 +34,7 @@ function App() {
       }
     };
     fetchPosts();
-  }, []);
+  }, [posts]);
 
   const [isLogged, setIsLogged] = useState(
     () => !!localStorage.getItem("token"),

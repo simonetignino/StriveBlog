@@ -61,4 +61,26 @@ router.get(
     }
   },
 );
+
+// Rotta per iniziare il processo di autenticazione di git hub
+router.get(
+  "/github",
+  passport.authenticate("github", { scope: ["user:email"] }),
+);
+
+router.get(
+  "/github/callback",
+  passport.authenticate("github", { failureRedirect: "/login" }),
+  handleAuthCallback,
+);
+
+async function handleAuthCallback(req, res) {
+  try {
+    const token = await generateJWT({ id: req.user._id });
+    res.redirect(`http://localhost:5173/login?token=${token}`);
+  } catch (error) {
+    console.error("Errore token");
+    res.redirect("/login?error=auth_failed");
+  }
+}
 export default router;

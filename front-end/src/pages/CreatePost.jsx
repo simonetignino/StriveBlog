@@ -3,7 +3,7 @@ import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import { useNavigate } from "react-router-dom";
 import { createPost, getMe } from "../services/api";
-import { Button } from "react-bootstrap";
+import { Button, Col, Container, Row } from "react-bootstrap";
 import { useEffect } from "react";
 
 function CreatePost() {
@@ -75,92 +75,105 @@ function CreatePost() {
   };
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <InputGroup className="mb-3 mt-3 w-25">
-        <Form.Control
-          name="title"
-          value={post.title}
-          placeholder="Title"
-          onChange={handleChange}
-          aria-label="Title"
-          aria-describedby="basic-addon1"
-          data-custom-input
-        />
-      </InputGroup>
+    <Container>
+      <Form onSubmit={handleSubmit}>
+        <Row className="mb-3 mt-5">
+          <Col md={6}>
+            <InputGroup>
+              <Form.Control
+                name="title"
+                value={post.title}
+                placeholder="Title"
+                onChange={handleChange}
+                aria-label="Title"
+                aria-describedby="basic-addon1"
+                data-custom-input
+              />
+            </InputGroup>
+          </Col>
+        </Row>
 
-      <InputGroup>
-        <Form.Control
-          name="content"
-          value={post.content}
-          className="mb-3"
-          onChange={handleChange}
-          as="textarea"
-          rows={5}
-          aria-label="Content"
-          placeholder="Content"
-          data-custom-input
-        />
-      </InputGroup>
+        <Row className="mb-3">
+          <Col>
+            <Form.Control
+              name="content"
+              value={post.content}
+              as="textarea"
+              rows={5}
+              onChange={handleChange}
+              aria-label="Content"
+              placeholder="Content"
+              data-custom-input
+            />
+          </Col>
+        </Row>
 
-      <InputGroup className="mb-3 d-flex align-items-center justify-content-center">
-        <Form.Control
-          name="author"
-          type="email"
-          className="me-2"
-          value={post.author}
-          onChange={handleChange}
-          placeholder="Author"
-          aria-label="Author"
-          aria-describedby="basic-addon2"
-          data-custom-input
-        />
-        <Form.Group className="me-2">
-          <Form.Select
-            aria-label="Default select example"
-            name="category"
-            value={post.category}
-            onChange={handleChange}
-            data-custom-input
-          >
-            <option>Category</option>
-            <option value="Sport">Sport</option>
-            <option value="Videogames">Videogames</option>
-            <option value="Actuality">Actuality</option>
-          </Form.Select>
-        </Form.Group>
+        <Row className="mb-3">
+          <Col md={4}>
+            <Form.Control
+              name="author"
+              type="email"
+              value={post.author}
+              onChange={handleChange}
+              placeholder="Author"
+              aria-label="Author"
+              aria-describedby="basic-addon2"
+              data-custom-input
+            />
+          </Col>
+          <Col md={4}>
+            <Form.Select
+              aria-label="Category"
+              name="category"
+              value={post.category}
+              onChange={handleChange}
+              data-custom-input
+            >
+              <option value="">Category</option>
+              <option value="Sport">Sport</option>
+              <option value="Videogames">Videogames</option>
+              <option value="Actuality">Actuality</option>
+            </Form.Select>
+          </Col>
+          <Col md={4}>
+            <InputGroup>
+              <Form.Control
+                id="readTime"
+                name="readTime"
+                value={post.readTime.value}
+                onChange={handleChange}
+                type="number"
+                aria-label="Amount (to the nearest minute)"
+                placeholder="Read Time"
+                data-custom-input
+              />
+              <InputGroup.Text>minutes</InputGroup.Text>
+            </InputGroup>
+          </Col>
+        </Row>
 
-        <Form.Control
-          id="readTime"
-          name="readTime"
-          value={post.readTime.value}
-          onChange={handleChange}
-          type="number"
-          aria-label="Amount (to the nearest minute)"
-          placeholder="Read Time"
-          data-custom-input
-        />
-        <InputGroup.Text id="basic-addon2">minutes</InputGroup.Text>
-      </InputGroup>
+        <Row className="mb-3">
+          <Col>
+            <Form.Group controlId="formFile">
+              <Form.Control
+                name="cover"
+                type="file"
+                onChange={handleFileChange}
+                // value={post.cover}
+              />
+            </Form.Group>
+          </Col>
+        </Row>
 
-      <InputGroup className="d-flex justify-content-between">
-        <Form.Group controlId="formFile" className="w-50">
-          <Form.Control
-            name="cover"
-            type="file"
-            onChange={handleFileChange}
-            // value={post.cover}
-          />
-        </Form.Group>
-      </InputGroup>
-      <Button
-        className="mt-3 mb-5 w-25"
-        variant="outline-success"
-        type="submit"
-        data-custom-input
-      >
-        Crea il post
-      </Button>
-    </Form>
+        <Row className="mb-3">
+          <Col className="d-flex justify-content-center">
+            <Button variant="outline-success" type="submit" data-custom-input>
+              Crea il post
+            </Button>
+          </Col>
+        </Row>
+      </Form>
+    </Container>
   );
 }
 

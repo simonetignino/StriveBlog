@@ -1,5 +1,6 @@
 import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
+import { Strategy as GithubStrategy } from "passport-github2";
 import Author from "../models/Authors.js";
 
 // Configuriamo la strategia di autenticazione con Google
@@ -10,32 +11,85 @@ passport.use(
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL: "/api/auth/google/callback",
     },
-    // Funzione chiamata quando l'autenticazione è avvenuto con successo
     async (accessToken, refreshToken, profile, done) => {
       try {
         console.log(profile);
-        // Cerco se nel mio db esiste già un autore co nun certo Google ID
         let author = await Author.findOne({ googleId: profile.id });
-
-        // Se non esiste, lo creo
         if (!author) {
           console.log(profile);
           author = new Author({
             googleId: profile.id,
-            name: profile.givenName,
+            name: profile.name.givenName,
             surname: profile.name.familyName,
             email: profile.emails[0].value,
           });
-          // Salvo l'autore nel DB
           await author.save();
         }
-        // Passo l'autore al middleware di Passport
-        // null -> significa che non ci sono stati errori
-        // authro -> autore che ho appena creato
         done(null, author);
       } catch (err) {
         console.error(err);
-        // se accade un errore lo passo a passport
+        done(err, null);
+      }
+    },
+  ),
+);
+
+passport.use(
+  new GithubStrategy(
+    {
+      clientID: process.env.GITHUB_CLIENT_ID,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET,
+      callbackURL: "/api/auth/github/callback",
+    },
+    async (accessToken, refreshToken, profile, done) => {
+      try {
+        let author = await Author.findOne({ githubId: profile.id });
+
+        // Estrai nome e cognome dal profilo GitHub
+        let nome, cognome;
+        if (profile.displayName) {
+          const nameParts = profile.displayName.split(" ");
+          nome = nameParts[0];
+          cognome = nameParts.slice(1).join(" ");
+        } else if (profile.username) {
+          nome = profile.username;
+          cognome = "";
+        } else {
+          nome = "GitHub";
+          cognome = "User";
+        }
+
+        // Gestione dell'email
+        let email =
+          profile.emails && profile.emails.length > 0
+            ? profile.emails.find((e) => e.primary || e.verified)?.value ||
+              profile.emails[0].value
+            : `${profile.id}@github.example.com`;
+
+        if (author) {
+          // Aggiorna l'autore esistente
+          author.name = nome;
+          author.surname = cognome;
+          author.email = email;
+          author.refreshToken = refreshToken;
+        } else {
+          // Crea un nuovo autore
+          author = new Author({
+            githubId: profile.id,
+            name: nome,
+            surname: cognome,
+            email: email,
+            refreshToken: refreshToken,
+          });
+        }
+
+        await author.save();
+        console.log(
+          `Autore ${author.name} ${author.surname} salvato con successo`,
+        );
+        done(null, author);
+      } catch (err) {
+        console.error("Errore durante l'autenticazione GitHub: ", err);
         done(err, null);
       }
     },

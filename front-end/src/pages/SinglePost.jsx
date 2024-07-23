@@ -137,7 +137,7 @@ export default function SinglePost() {
       <Row className="justify-content-center">
         <Col lg={8}>
           <h1 className="display-4 mb-3">{post.title}</h1>
-          {userData.email === post.author && (
+          {userData && userData.email === post.author && (
             <Button
               // onClick={() => handlePatchPost(post._id)}
               variant="danger"

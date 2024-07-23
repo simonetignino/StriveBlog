@@ -27,6 +27,9 @@ const authorSchema = new mongoose.Schema(
     googleId: {
       type: String,
     },
+    githubId: {
+      type: String,
+    },
   },
   { collection: "authors" },
 );
